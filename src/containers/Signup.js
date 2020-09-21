@@ -1,11 +1,11 @@
 import React from 'react';
-import { Form, Input, Icon, Button, Select, Option } from 'antd';
+import { Form, Input, Icon, Button, Select } from 'antd';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as actions from '../store/actions/auth';
 
 const FormItem = Form.Item;
-
+const Option = Select.Option
 class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
@@ -24,7 +24,7 @@ class RegistrationForm extends React.Component {
           values.confirm,
           is_student
         );
-        this.props.history.push('/');
+        // this.props.history.push('/');
       }
     });
   }
@@ -62,7 +62,7 @@ class RegistrationForm extends React.Component {
           {getFieldDecorator('userName', {
             rules: [{ required: true, message: 'Please input your username!' }],
           })(
-            <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+            <Input placeholder="Username" />
           )}
         </FormItem>
 
@@ -74,7 +74,7 @@ class RegistrationForm extends React.Component {
               required: true, message: 'Please input your E-mail!',
             }],
           })(
-            <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />
+            <Input placeholder="Email" />
           )}
         </FormItem>
 
@@ -86,7 +86,7 @@ class RegistrationForm extends React.Component {
               validator: this.validateToNextPassword,
             }],
           })(
-            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+            <Input type="password" placeholder="Password" />
           )}
         </FormItem>
 
@@ -99,7 +99,7 @@ class RegistrationForm extends React.Component {
               validator: this.compareToFirstPassword,
             }],
           })(
-            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" onBlur={this.handleConfirmBlur} />
+            <Input type="password" placeholder="Password" onBlur={this.handleConfirmBlur} />
           )}
         </FormItem>
 
@@ -132,7 +132,7 @@ class RegistrationForm extends React.Component {
   }
 }
 
-const WrappedRegistrationForm = Form.create()(RegistrationForm);
+//const WrappedRegistrationForm = Form.create()(RegistrationForm);
 
 const mapStateToProps = (state) => {
   return {
@@ -147,4 +147,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedRegistrationForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
