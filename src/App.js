@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
 import BaseRouter from "./routes";
+import "antd/dist/antd.css";
 import * as actions from "./store/actions/auth";
-import 'antd/dist/antd.css';
-import "semantic-ui-css/semantic.min.css";
+
 import CustomLayout from "./containers/Layout";
 
 class App extends Component {
@@ -14,28 +14,27 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <CustomLayout {...this.props}>
-          <BaseRouter />
-        </CustomLayout>
-      </Router>
+      <div>
+        <Router>
+          <CustomLayout {...this.props}>
+            <BaseRouter />
+          </CustomLayout>
+        </Router>
+      </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null
+    isAuthenticated: state.token !== null,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onTryAutoSignup: () => dispatch(actions.authCheckState())
+    onTryAutoSignup: () => dispatch(actions.authCheckState()),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
