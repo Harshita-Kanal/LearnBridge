@@ -1,11 +1,12 @@
-import React from 'react';
-import { Form, Input, Icon, Button, Select } from 'antd';
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import * as actions from '../store/actions/auth';
+import React from "react";
+import { Form, Input, Icon, Button, Select } from "antd";
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { Header } from "semantic-ui-react";
+import * as actions from "../store/actions/auth";
 
 const FormItem = Form.Item;
-const Option = Select.Option
+const Option = Select.Option;
 class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
@@ -27,87 +28,101 @@ class RegistrationForm extends React.Component {
         // this.props.history.push('/');
       }
     });
-  }
+  };
 
   handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  }
+  };
 
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
+    if (value && value !== form.getFieldValue("password")) {
+      callback("Two passwords that you enter is inconsistent!");
     } else {
       callback();
     }
-  }
+  };
 
   validateToNextPassword = (rule, value, callback) => {
     const form = this.props.form;
     if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
+      form.validateFields(["confirm"], { force: true });
     }
     callback();
-  }
-
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
 
     return (
       <Form onSubmit={this.handleSubmit}>
+        <Header as="h2" color="teal" textAlign="center">
+          Register to your account
+        </Header>
+        <FormItem>
+          {getFieldDecorator("userName", {
+            rules: [{ required: true, message: "Please input your username!" }],
+          })(<Input placeholder="Username" />)}
+        </FormItem>
 
         <FormItem>
-          {getFieldDecorator('userName', {
-            rules: [{ required: true, message: 'Please input your username!' }],
+          {getFieldDecorator("email", {
+            rules: [
+              {
+                type: "email",
+                message: "The input is not valid E-mail!",
+              },
+              {
+                required: true,
+                message: "Please input your E-mail!",
+              },
+            ],
+          })(<Input placeholder="Email" />)}
+        </FormItem>
+
+        <FormItem>
+          {getFieldDecorator("password", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+              {
+                validator: this.validateToNextPassword,
+              },
+            ],
+          })(<Input type="password" placeholder="Password" />)}
+        </FormItem>
+
+        <FormItem>
+          {getFieldDecorator("confirm", {
+            rules: [
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              {
+                validator: this.compareToFirstPassword,
+              },
+            ],
           })(
-            <Input placeholder="Username" />
+            <Input
+              type="password"
+              placeholder="Password"
+              onBlur={this.handleConfirmBlur}
+            />
           )}
         </FormItem>
 
         <FormItem>
-          {getFieldDecorator('email', {
-            rules: [{
-              type: 'email', message: 'The input is not valid E-mail!',
-            }, {
-              required: true, message: 'Please input your E-mail!',
-            }],
-          })(
-            <Input placeholder="Email" />
-          )}
-        </FormItem>
-
-        <FormItem>
-          {getFieldDecorator('password', {
-            rules: [{
-              required: true, message: 'Please input your password!',
-            }, {
-              validator: this.validateToNextPassword,
-            }],
-          })(
-            <Input type="password" placeholder="Password" />
-          )}
-        </FormItem>
-
-        <FormItem>
-
-          {getFieldDecorator('confirm', {
-            rules: [{
-              required: true, message: 'Please confirm your password!',
-            }, {
-              validator: this.compareToFirstPassword,
-            }],
-          })(
-            <Input type="password" placeholder="Password" onBlur={this.handleConfirmBlur} />
-          )}
-        </FormItem>
-
-        <FormItem>
-          {getFieldDecorator('userType', {
-            rules: [{
-              required: true, message: 'Please select a user!',
-            },],
+          {getFieldDecorator("userType", {
+            rules: [
+              {
+                required: true,
+                message: "Please select a user!",
+              },
+            ],
           })(
             <Select placeholder="Select a user type">
               <Option value="student">Student</Option>
@@ -117,34 +132,43 @@ class RegistrationForm extends React.Component {
         </FormItem>
 
         <FormItem>
-          <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginRight: "10px" }}
+          >
             Signup
-        </Button>
-        Or
-        <NavLink
-            style={{ marginRight: '10px' }}
-            to='/login/'> login
-        </NavLink>
+          </Button>
+          Or
+          <NavLink style={{ marginRight: "10px" }} to="/login/">
+            {" "}
+            login
+          </NavLink>
         </FormItem>
-
       </Form>
     );
   }
 }
 
-//const WrappedRegistrationForm = Form.create()(RegistrationForm);
+const WrappedRegistrationForm = Form.create()(RegistrationForm);
 
 const mapStateToProps = (state) => {
   return {
     loading: state.loading,
-    error: state.error
-  }
-}
+    error: state.error,
+  };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (username, email, password1, password2, is_student) => dispatch(actions.authSignup(username, email, password1, password2, is_student))
-  }
-}
+    onAuth: (username, email, password1, password2, is_student) =>
+      dispatch(
+        actions.authSignup(username, email, password1, password2, is_student)
+      ),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedRegistrationForm);
