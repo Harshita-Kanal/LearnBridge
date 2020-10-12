@@ -129,7 +129,7 @@
 // );
 
 import React from "react";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu, Breadcrumb, Button } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
@@ -148,9 +148,11 @@ class CustomLayout extends React.Component {
             defaultSelectedKeys={["2"]}
             style={{ lineHeight: "64px" }}
           >
-            {this.props.isAuthenticated ? (
-              <Menu.Item key="2" onClick={this.props.logout}>
-                Logout
+            {this.props.isAuthenticated == true ? (
+              <Menu.Item key="2">
+                <Button type="text" onClick={this.props.logout}>
+                  Logout
+                </Button>
               </Menu.Item>
             ) : (
               <Menu.Item
@@ -159,7 +161,9 @@ class CustomLayout extends React.Component {
                   console.log("It works");
                 }}
               >
-                <Link to="/login">Login</Link>
+                <a href="/login">
+                  <Button type="link">Login</Button>
+                </a>
               </Menu.Item>
             )}
 
@@ -174,7 +178,7 @@ class CustomLayout extends React.Component {
               <Link to="/">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/">List</Link>
+              <Link to={`/profiles/${this.props.userId}`}>Profile</Link>
             </Breadcrumb.Item>
           </Breadcrumb>
           <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
@@ -189,10 +193,18 @@ class CustomLayout extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    userId: state.auth.userId,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => dispatch(actions.logout()),
   };
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(CustomLayout));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(CustomLayout)
+);
