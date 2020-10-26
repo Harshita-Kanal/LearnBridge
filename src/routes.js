@@ -12,6 +12,7 @@ const BaseRouter = () => (
     <Route path="/login" component={Login} />
     <Route path="/signup" component={Signup} />
     <Route path="/profile/:id" component={Profile} />
+    <Route exact path="/home" component={HomepageLayout} />
     <Route exact path="/" component={HomepageLayout} />
   </Hoc>
 );
